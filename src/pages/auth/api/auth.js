@@ -40,7 +40,6 @@ export const logout = async () => {
         withCredentials: true,
       }
     );
-
     return true;
   } catch (err) {
     throw err;

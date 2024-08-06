@@ -2,12 +2,12 @@ import { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { login } from "../api/auth";
+import { login } from "../api/auth.js";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../../store/slices/authslice";
-import { setUser } from "../../../store/slices/userSlice";
+import { setLogin } from "../../../store/slices/authslice.js";
+import { setUser } from "../../../store/slices/userslice.js";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,11 +33,8 @@ const Login = () => {
     if (!loginData?.email || !loginData?.password) {
       return setIsError("Please fill all the fields.");
     }
-
     try {
-      setIsLoading(true);
       const response = await login(loginData);
-      // console.log(response);
       dispatch(setLogin({ accessToken: response.data.accessToken }));
       dispatch(setUser({ user: response.data.user }));
       navigate("/");
@@ -75,10 +72,10 @@ const Login = () => {
                 </label>
                 <input
                   type="text"
+                  onChange={(e) => inputChangeHandler("email", e.target.value)}
                   className="border border-gray outline-none rounded px-2  p-1 mt-2 "
                   id="email"
                   name="email"
-                  onChange={(e) => inputChangeHandler("email", e.target.value)}
                 />
               </div>
 
@@ -89,23 +86,23 @@ const Login = () => {
                 <div className="border border-gray rounded flex items-center mt-2">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className=" outline-none px-2  p-1 rounded w-11/12"
-                    id="password"
-                    name="password"
                     onChange={(e) =>
                       inputChangeHandler("password", e.target.value)
                     }
+                    className=" outline-none px-2  p-1 rounded w-11/12"
+                    id="password"
+                    name="password"
                   />
 
                   {showPassword ? (
                     <FaEye
                       className="cursor-pointer text-gray-500"
-                      onClick={() => setShowPassword((prevState) => !prevState)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                     />
                   ) : (
                     <FaEyeSlash
                       className="cursor-pointer text-gray-500"
-                      onClick={() => setShowPassword((prevState) => !prevState)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                     />
                   )}
                 </div>
