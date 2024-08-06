@@ -2,40 +2,60 @@ import { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { login } from "../api/auth";
+import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../../store/slices/authslice";
+import { setUser } from "../../../store/slices/userSlice";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const passwordHandler = () => {
-    setShowPassword((prev) => !prev);
+  const inputChangeHandler = (name, value) => {
+    setLoginData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  const changeHandler = (e) => {
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        [e.target.name]: e.target.value,
-      };
-    });
-  };
-
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    if (email.value === "") {
-      console.log("please enter your email");
-    } else if (password.value === "") {
-      console.log("please enter your password");
-    } else {
-      console.log(formData);
+
+    if (!loginData?.email || !loginData?.password) {
+      return setIsError("Please fill all the fields.");
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await login(loginData);
+      console.log(response);
+      dispatch(setLogin({ accessToken: response.data.accessToken }));
+      dispatch(setUser({ user: response.data.user }));
+      navigate("/");
+    } catch (err) {
+      setIsError(err?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
+      {isLoading && <p>Loading...</p>}
+      {isError && (
+        <Alert variant="filled" severity="error">
+          {isError}
+        </Alert>
+      )}
       <div className="w-full h-full flex items-center justify-center bg-blue-100">
         <div className="w-[800px] h-[480px] bg-white rounded-lg flex item-center">
           <div className="w-2/4 h-full  p-4 ">
@@ -48,48 +68,44 @@ const Login = () => {
           </div>
           <div className="w-2/4 h-full p-4">
             <h1 className="text-center mt-5 text-2xl font-bold">Login</h1>
-            <p className="text-center text-sm mt-2">
-              Please enter your details.
-            </p>
-
             <form onSubmit={submitHandler}>
               <div className="flex flex-col">
                 <label className="font-semibold" htmlFor="email">
-                  *Email
+                  Email
                 </label>
                 <input
                   type="text"
-                  onChange={changeHandler}
                   className="border border-gray outline-none rounded px-2  p-1 mt-2 "
                   id="email"
                   name="email"
-                  value={formData.email}
+                  onChange={(e) => inputChangeHandler("email", e.target.value)}
                 />
               </div>
 
               <div className="flex flex-col mt-5">
                 <label className="font-semibold" htmlFor="password">
-                  *Password
+                  Password
                 </label>
                 <div className="border border-gray rounded flex items-center mt-2">
                   <input
                     type={showPassword ? "text" : "password"}
-                    onChange={changeHandler}
                     className=" outline-none px-2  p-1 rounded w-11/12"
                     id="password"
                     name="password"
-                    value={formData.password}
+                    onChange={(e) =>
+                      inputChangeHandler("password", e.target.value)
+                    }
                   />
 
                   {showPassword ? (
                     <FaEye
                       className="cursor-pointer text-gray-500"
-                      onClick={passwordHandler}
+                      onClick={() => setShowPassword((prevState) => !prevState)}
                     />
                   ) : (
                     <FaEyeSlash
                       className="cursor-pointer text-gray-500"
-                      onClick={passwordHandler}
+                      onClick={() => setShowPassword((prevState) => !prevState)}
                     />
                   )}
                 </div>
