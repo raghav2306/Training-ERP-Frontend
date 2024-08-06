@@ -37,7 +37,7 @@ const Login = () => {
     try {
       setIsLoading(true);
       const response = await login(loginData);
-      console.log(response);
+      // console.log(response);
       dispatch(setLogin({ accessToken: response.data.accessToken }));
       dispatch(setUser({ user: response.data.user }));
       navigate("/");
