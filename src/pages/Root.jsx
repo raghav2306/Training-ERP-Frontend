@@ -7,9 +7,9 @@ const Root = () => {
   return (
     <>
       <Header />
-      <div className="flex h-[90%]">
+      <div className="flex h-[90%] ">
         <SideMenu />
-        <Main>
+        <Main >
           <Outlet />
         </Main>
       </div>

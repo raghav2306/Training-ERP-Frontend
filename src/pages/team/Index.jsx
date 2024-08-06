@@ -3,10 +3,10 @@ import TeamHeader from "./TeamHeader";
 
 const Index = () => {
   return (
-    <>
+    <div >
       <TeamHeader />
       <Outlet />
-    </>
+    </div>
   );
 };
 

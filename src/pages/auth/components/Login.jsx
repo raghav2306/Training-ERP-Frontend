@@ -2,40 +2,57 @@ import { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { login } from "../api/auth.js";
+import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../../store/slices/authslice.js";
+import { setUser } from "../../../store/slices/userslice.js";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const passwordHandler = () => {
-    setShowPassword((prev) => !prev);
+  const inputChangeHandler = (name, value) => {
+    setLoginData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  const changeHandler = (e) => {
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        [e.target.name]: e.target.value,
-      };
-    });
-  };
-
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    if (email.value === "") {
-      console.log("please enter your email");
-    } else if (password.value === "") {
-      console.log("please enter your password");
-    } else {
-      console.log(formData);
+
+    if (!loginData?.email || !loginData?.password) {
+      return setIsError("Please fill all the fields.");
+    }
+    try {
+      const response = await login(loginData);
+      dispatch(setLogin({ accessToken: response.data.accessToken }));
+      dispatch(setUser({ user: response.data.user }));
+      navigate("/");
+    } catch (err) {
+      setIsError(err?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
+      {isLoading && <p>Loading...</p>}
+      {isError && (
+        <Alert variant="filled" severity="error">
+          {isError}
+        </Alert>
+      )}
       <div className="w-full h-full flex items-center justify-center bg-blue-100">
         <div className="w-[800px] h-[480px] bg-white rounded-lg flex item-center">
           <div className="w-2/4 h-full  p-4 ">
@@ -59,11 +76,10 @@ const Login = () => {
                 </label>
                 <input
                   type="text"
-                  onChange={changeHandler}
+                  onChange={(e) => inputChangeHandler("email", e.target.value)}
                   className="border border-gray outline-none rounded px-2  p-1 mt-2 "
                   id="email"
                   name="email"
-                  value={formData.email}
                 />
               </div>
 
@@ -74,22 +90,23 @@ const Login = () => {
                 <div className="border border-gray rounded flex items-center mt-2">
                   <input
                     type={showPassword ? "text" : "password"}
-                    onChange={changeHandler}
+                    onChange={(e) =>
+                      inputChangeHandler("password", e.target.value)
+                    }
                     className=" outline-none px-2  p-1 rounded w-11/12"
                     id="password"
                     name="password"
-                    value={formData.password}
                   />
 
                   {showPassword ? (
                     <FaEye
                       className="cursor-pointer text-gray-500"
-                      onClick={passwordHandler}
+                      onClick={() => setShowPassword((prev) => !prev)}
                     />
                   ) : (
                     <FaEyeSlash
                       className="cursor-pointer text-gray-500"
-                      onClick={passwordHandler}
+                      onClick={() => setShowPassword((prev) => !prev)}
                     />
                   )}
                 </div>
