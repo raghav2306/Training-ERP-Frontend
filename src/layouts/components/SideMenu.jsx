@@ -25,7 +25,7 @@ const SideMenu = () => {
         <div>
           <NavLink
             to="/"
-            className="hover:bg-gradient-to-r from-purple-500 to-pink-500 flex items-center   py-2 hover:text-white gap-2 px-2 rounded"
+            className="hover:bg-gradient-to-r from-purple-500 to-pink-500 flex items-center   py-2 hover:text-white gap-4 px-2 rounded"
           >
             <RxDashboard />
             Dashboard
@@ -34,14 +34,14 @@ const SideMenu = () => {
         <div >
           <NavLink
             to="/team"
-            className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-2  py-2  px-2 rounded"
+            className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-4  py-2  px-2 rounded"
           >
             <RiTeamFill />
             Team
           </NavLink>
         </div>
       </div>
-      <div className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-2  py-2  px-2 rounded">
+      <div className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-4  py-2  px-2 rounded">
         <IoLogOutOutline className="text-lg"/>
         <button onClick={logoutHandler}>Log Out</button>
       </div>

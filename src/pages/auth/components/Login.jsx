@@ -116,7 +116,7 @@ const Login = () => {
                 forgot password?
               </Link>
 
-              <button className="w-full  bg-blue-500 py-2 rounded text-white mt-6">
+              <button className="w-full hover:bg-blue-600 ease-in duration-200  bg-blue-500 py-2 rounded text-white mt-6">
                 Log in
               </button>
             </form>
