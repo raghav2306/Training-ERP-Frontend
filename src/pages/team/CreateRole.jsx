@@ -32,7 +32,11 @@ const CreateRole = ({ showModal, setShowModal }) => {
     }
     if (error) {
       setIsLoading(false);
-      setIsError(error);
+      setShowAlert({
+        type: "error",
+        msg: error,
+        show: true,
+      });
     }
   }, [data, loading, error]);
 

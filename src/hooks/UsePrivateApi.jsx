@@ -14,6 +14,7 @@ const UsePrivateApi = () => {
     baseURL,
     withCredentials: true,
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
   });
@@ -25,7 +26,6 @@ const UsePrivateApi = () => {
       const response = await axiosInstance.post(endpoint, data);
       setData(response?.data);
     } catch (err) {
-      console.log(err);
       setError(err?.response?.data?.message || "Internal Server Error");
     } finally {
       setLoading(false);
@@ -34,7 +34,7 @@ const UsePrivateApi = () => {
   const put = async (endpoint, data, queryParams) => {};
   const patch = async (endpoint, data, queryParams) => {};
   const del = async (endpoint, queryParams) => {};
-  
+
   return { get, post, put, patch, del, data, loading, error };
 };
 
