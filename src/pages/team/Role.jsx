@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaUserPlus } from "react-icons/fa6";
 import CreateRole from "./CreateRole";
+import RoleList from "./RoleList";
 
 const Role = () => {
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +18,7 @@ const Role = () => {
           Create Role
         </button>
       </div>
+      <RoleList />
       {showModal && (
         <CreateRole showModal={showModal} setShowModal={setShowModal} />
       )}
