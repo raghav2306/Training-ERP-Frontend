@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaUserPlus } from "react-icons/fa6";
-import Modal from "../../custom/components/Modal";
+import CreateRole from "./CreateRole";
 
 const Role = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,22 +16,10 @@ const Role = () => {
           <FaUserPlus />
           Create Role
         </button>
-
-        <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
-          <form className="flex flex-col gap-2">
-            <label htmlFor="role">Role/Designation Name</label>
-            <input
-              id="role"
-              type="text"
-              placeholder="Enter name"
-              className="border bg-blue-100 rounded px-2 py-1 outline-none"
-            />
-            <button className="border border-blue-500 px-2 py-1 rounded text-blue-500 hover:bg-blue-600 hover:text-white ease duration-300 mt-4">
-              Submit
-            </button>
-          </form>
-        </Modal>
       </div>
+      {showModal && (
+        <CreateRole showModal={showModal} setShowModal={setShowModal} />
+      )}
     </>
   );
 };
