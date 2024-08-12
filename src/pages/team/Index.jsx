@@ -3,7 +3,7 @@ import TeamHeader from "./TeamHeader";
 
 const Index = () => {
   return (
-    <div >
+    <div className="">
       <TeamHeader />
       <Outlet />
     </div>

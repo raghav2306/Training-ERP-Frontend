@@ -25,7 +25,6 @@ const UsePrivateApi = () => {
   const put = async (endpoint, data, queryParams) => {};
   const patch = async (endpoint, data, queryParams) => {};
   const del = async (endpoint, queryParams) => {};
-
   return { get, post, put, patch, del, data, loading, error };
 };
 

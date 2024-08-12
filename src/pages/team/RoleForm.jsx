@@ -1,12 +1,11 @@
 import { useState } from "react";
-import CustomModal from "../../custom/components/CustomModal";
 import UsePrivateApi from "../../hooks/UsePrivateApi";
 
 const RoleForm = () => {
-  const [name, setName] = useState("");
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { data, loading, error, post } = UsePrivateApi();
+  cont[(name, setName)] = useState("");
+  cont[(isError, setIsError)] = useState(false);
+  cont[(isLoading, setIsLoading)] = useState(false);
+  const { data, loading, error, post } = UsePrivateApi;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,11 +15,10 @@ const RoleForm = () => {
     }
     post("/api/role/create-role", { name });
   };
-  
   return (
     <>
       <CustomModal>
-        <form onSubmit={handleSubmit}>
+        <form>
           <input
             type="text"
             name="name"
@@ -36,3 +34,6 @@ const RoleForm = () => {
 };
 
 export default RoleForm;
+
+
+

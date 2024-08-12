@@ -27,7 +27,11 @@ const UsePersistLogin = () => {
     };
 
     if (!isAuth) {
+<<<<<<< HEAD
       getNewAT();
+=======
+      getNewAt();
+>>>>>>> a19380cd30f1b33d6993f0914c087ad39f8da3cc
     } else {
       setIsLoading(false);
     }
@@ -36,8 +40,12 @@ const UsePersistLogin = () => {
   if (isError) {
     return <Navigate to="/login" />;
   }
+<<<<<<< HEAD
 
   return <>{isLoading ? <div>Loading...</div> : <Outlet />}</>;
+=======
+  return <> {isLoading ? <div>Loading...</div> : <Outlet />}</>;
+>>>>>>> a19380cd30f1b33d6993f0914c087ad39f8da3cc
 };
 
 export default UsePersistLogin;
