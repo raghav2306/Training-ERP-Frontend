@@ -31,7 +31,7 @@ const SideMenu = () => {
             Dashboard
           </NavLink>
         </div>
-        <div >
+        <div>
           <NavLink
             to="/team"
             className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-4  py-2  px-2 rounded"
@@ -42,10 +42,7 @@ const SideMenu = () => {
         </div>
       </div>
       <div className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-4  py-2  px-2 rounded">
-        <IoLogOutOutline className="text-lg"/>
-        <button onClick={logoutHandler}>Log Out</button>
-      </div>
-      <div>
+        <IoLogOutOutline className="text-lg" />
         <button onClick={logoutHandler}>Log Out</button>
       </div>
     </div>

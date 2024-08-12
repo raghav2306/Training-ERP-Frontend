@@ -1,5 +1,4 @@
 import React from "react";
-// import { GiCrossMark } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 
 const Modal = ({ isVisible, onClose, children }) => {
@@ -8,6 +7,7 @@ const Modal = ({ isVisible, onClose, children }) => {
   const handleClose = (e) => {
     if (e.target.id === "wrapper") onClose();
   };
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center"
