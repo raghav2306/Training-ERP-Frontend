@@ -1,11 +1,14 @@
 import { Outlet } from "react-router-dom";
 import TeamHeader from "./TeamHeader";
+import { TeamCtxProvider } from "../../contexts/TeamContext";
 
 const Index = () => {
   return (
     <div className="">
       <TeamHeader />
-      <Outlet />
+      <TeamCtxProvider>
+        <Outlet />
+      </TeamCtxProvider>
     </div>
   );
 };

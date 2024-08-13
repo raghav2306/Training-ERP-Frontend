@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Modal from "../../custom/components/Modal";
 import UsePrivateApi from "../../hooks/UsePrivateApi";
 import { ClipLoader } from "react-spinners";
 import UseAlert from "../../hooks/UseAlert";
+import TeamCtx from "../../contexts/TeamContext";
 
 const CreateRole = ({ showModal, setShowModal }) => {
   const [role, setRole] = useState("");
@@ -13,11 +14,11 @@ const CreateRole = ({ showModal, setShowModal }) => {
     msg: "",
     show: false,
   });
+  const teamCtx = useContext(TeamCtx);
 
   useEffect(() => {
     if (data) {
       setIsLoading(false);
-      //   console.log(data);
       setShowAlert({
         type: "success",
         msg: data?.message,
@@ -25,7 +26,8 @@ const CreateRole = ({ showModal, setShowModal }) => {
       });
       setTimeout(() => {
         setShowModal(false);
-      }, 3000);
+      }, 2000);
+      teamCtx.addRoleHandler(data?.role);
     }
     if (loading) {
       setIsLoading(true);
