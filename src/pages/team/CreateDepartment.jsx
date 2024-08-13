@@ -1,12 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../custom/components/Modal";
 import UsePrivateApi from "../../hooks/UsePrivateApi";
-import { ClipLoader } from "react-spinners";
 import UseAlert from "../../hooks/UseAlert";
-import TeamCtx from "../../contexts/TeamContext";
 
-const CreateRole = ({ showModal, setShowModal }) => {
-  const [role, setRole] = useState("");
+const CreateDepartment = ({ showModal, setShowModal }) => {
+  const [department, setDepartment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { data, loading, error, post } = UsePrivateApi();
   const [showAlert, setShowAlert] = useState({
@@ -15,11 +13,10 @@ const CreateRole = ({ showModal, setShowModal }) => {
     show: false,
   });
 
-  const teamCtx = useContext(TeamCtx);
-
   useEffect(() => {
     if (data) {
       setIsLoading(false);
+      //   console.log(data);
       setShowAlert({
         type: "success",
         msg: data?.message,
@@ -28,7 +25,6 @@ const CreateRole = ({ showModal, setShowModal }) => {
       setTimeout(() => {
         setShowModal(false);
       }, 3000);
-      teamCtx.addRoleHandler(data?.role);
     }
     if (loading) {
       setIsLoading(true);
@@ -46,29 +42,28 @@ const CreateRole = ({ showModal, setShowModal }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (!role) {
+    if (!department) {
       setShowAlert({
         type: "error",
-        msg: "Please enter name for the role.",
+        msg: "Please enter department name.",
         show: true,
       });
       return;
     }
 
-    post("/api/role/create-role", { name: role });
+    post("/api/dept/create-dept", { name: department });
   };
-
   return (
-    <>
+    <div>
       <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
         <form className="flex flex-col gap-2" onSubmit={submitHandler}>
-          <label htmlFor="role">Role/Designation Name</label>
+          <label htmlFor="department">Department Name</label>
           <input
-            id="role"
+            id="department"
             type="text"
-            placeholder="Enter name"
+            placeholder="Enter department name"
             className="border bg-blue-100 rounded px-2 py-1 outline-none"
-            onChange={(e) => setRole(e.target.value)}
+            onChange={(e) => setDepartment(e.target.value)}
           />
           <button className="border border-blue-500 px-2 py-1 rounded text-blue-500 hover:bg-blue-600 hover:text-white ease duration-300 mt-4">
             {!isLoading ? (
@@ -81,11 +76,12 @@ const CreateRole = ({ showModal, setShowModal }) => {
           </button>
         </form>
       </Modal>
+
       {showAlert.show && (
         <UseAlert showAlert={showAlert} setShowAlert={setShowAlert} />
       )}
-    </>
+    </div>
   );
 };
 
-export default CreateRole;
+export default CreateDepartment;

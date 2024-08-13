@@ -19,7 +19,20 @@ const UsePrivateApi = () => {
     },
   });
 
-  const get = async (endpoint, queryParams) => {};
+  const get = async (endpoint, queryParams = {}) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(endpoint, {
+        params: queryParams,
+      });
+      setData(response?.data);
+    } catch (err) {
+      setError(err?.response?.data?.message || "Internal Server Error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const post = async (endpoint, data) => {
     try {
       setLoading(true);
@@ -31,6 +44,7 @@ const UsePrivateApi = () => {
       setLoading(false);
     }
   };
+
   const put = async (endpoint, data, queryParams) => {};
   const patch = async (endpoint, data, queryParams) => {};
   const del = async (endpoint, queryParams) => {};
