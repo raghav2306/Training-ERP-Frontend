@@ -39,19 +39,23 @@ const RoleList = () => {
 
   return (
     <>
-      <table>
-        <thead>
-          <th>Name</th>
-          <th>Actions</th>
+      <table className="w-[80%] m-auto mt-5 ">
+        <thead className="  bg-black text-white">
+          <tr>
+            <th className=" py-2">Name</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
           {teamCtx.roles.length > 0 &&
             teamCtx.roles.map((role) => (
-              <tr>
-                <td>{role.name}</td>
+              <tr className="even:bg-blue-100">
+                <td className="text-center  py-2 ">{role.name}</td>
                 <td>
-                  <button>Edit</button>
-                  <button>Delete</button>
+                  <div className="flex justify-center items-center gap-5 ">
+                    <FaUserEdit className="text-2xl cursor-pointer text-green-600 hover:text-green-700 ease-in duration-200" />
+                    <RiDeleteBin5Line className="text-2xl cursor-pointer text-red-500 hover:text-red-600 ease-in duration-200" />
+                  </div>
                 </td>
               </tr>
             ))}
