@@ -3,6 +3,9 @@ import UsePrivateApi from "../../hooks/UsePrivateApi";
 import { ClipLoader } from "react-spinners";
 import UseAlert from "../../hooks/UseAlert";
 import TeamCtx from "../../contexts/TeamContext";
+import { FaUserEdit } from "react-icons/fa";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import CreateRole from "./CreateRole";
 
 const RoleList = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +17,8 @@ const RoleList = () => {
 
   const { data, loading, error, get } = UsePrivateApi();
   const teamCtx = useContext(TeamCtx);
+  const [showModal, setShowModal] = useState(false);
+  const [roleEditId, setRoleEditId] = useState("");
 
   useEffect(() => {
     if (data) {
@@ -34,7 +39,7 @@ const RoleList = () => {
   }, [data, loading, error]);
 
   useEffect(() => {
-    if (teamCtx.roles.length === 0) get("/api/role/get-roles");
+    get("/api/role/get-roles");
   }, []);
 
   return (
@@ -49,11 +54,16 @@ const RoleList = () => {
         <tbody>
           {teamCtx.roles.length > 0 &&
             teamCtx.roles.map((role) => (
-              <tr className="even:bg-blue-100">
+              <tr className="even:bg-blue-100" key={role._id}>
                 <td className="text-center  py-2 ">{role.name}</td>
                 <td>
                   <div className="flex justify-center items-center gap-5 ">
-                    <FaUserEdit className="text-2xl cursor-pointer text-green-600 hover:text-green-700 ease-in duration-200" />
+                    <FaUserEdit
+                      className="text-2xl cursor-pointer text-green-600 hover:text-green-700 ease-in duration-200"
+                      onClick={() => {
+                        setShowModal(true), setRoleEditId(role._id);
+                      }}
+                    />
                     <RiDeleteBin5Line className="text-2xl cursor-pointer text-red-500 hover:text-red-600 ease-in duration-200" />
                   </div>
                 </td>
@@ -68,6 +78,13 @@ const RoleList = () => {
       )}
       {showAlert.show && (
         <UseAlert showAlert={showAlert} setShowAlert={setShowAlert} />
+      )}
+      {showModal && (
+        <CreateRole
+          showModal={showModal}
+          setShowModal={setShowModal}
+          roleEditId={roleEditId}
+        />
       )}
     </>
   );

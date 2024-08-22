@@ -9,7 +9,7 @@ export const TeamCtxProvider = ({ children }) => {
 
   const addRoleHandler = (newRoles) => {
     if (newRoles?.length > 0) {
-      setRoles((prevState) => [...prevState, ...newRoles]);
+      setRoles(newRoles);
     } else {
       setRoles((prevState) => [...prevState, newRoles]);
     }
