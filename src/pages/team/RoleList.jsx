@@ -6,6 +6,7 @@ import TeamCtx from "../../contexts/TeamContext";
 import { FaUserEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import CreateRole from "./CreateRole";
+import ConfirmBox from "../../custom/components/ConfirmBox";
 
 const RoleList = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,10 +17,18 @@ const RoleList = () => {
   });
 
   const { data, loading, error, get } = UsePrivateApi();
+  const {
+    data: delData,
+    loading: delLoading,
+    error: delError,
+    del,
+  } = UsePrivateApi();
   const teamCtx = useContext(TeamCtx);
   const [showModal, setShowModal] = useState(false);
   const [roleEditId, setRoleEditId] = useState("");
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
 
+  //for handling get api side-effects
   useEffect(() => {
     if (data) {
       setIsLoading(false);
@@ -38,9 +47,38 @@ const RoleList = () => {
     }
   }, [data, loading, error]);
 
+  //for handling delete api side-effects
+  useEffect(() => {
+    if (delData) {
+      setIsLoading(false);
+      const updatedRoles = teamCtx.roles.filter(
+        (item) => item._id !== roleEditId
+      );
+      teamCtx.addRoleHandler(updatedRoles);
+    }
+    if (delLoading) {
+      setIsLoading(true);
+    }
+    if (delError) {
+      setIsLoading(false);
+      setShowAlert({
+        type: "error",
+        msg: delError,
+        show: true,
+      });
+    }
+  }, [delData, delLoading, delError]);
+
   useEffect(() => {
     get("/api/role/get-roles");
   }, []);
+
+  const handleDeleteConfirmation = (arg) => {
+    if (arg) {
+      del(`/api/role/delete-role/${roleEditId}`);
+    }
+    setShowConfirmBox(false);
+  };
 
   return (
     <>
@@ -57,15 +95,29 @@ const RoleList = () => {
               <tr className="even:bg-blue-100" key={role._id}>
                 <td className="text-center  py-2 ">{role.name}</td>
                 <td>
-                  <div className="flex justify-center items-center gap-5 ">
+                  <button
+                    className="flex justify-center items-center gap-5 "
+                    disabled={role.name === "admin"}
+                  >
                     <FaUserEdit
-                      className="text-2xl cursor-pointer text-green-600 hover:text-green-700 ease-in duration-200"
+                      className={`text-2xl cursor-pointer ${
+                        role.name === "admin"
+                          ? "text-gray-600"
+                          : "text-green-600"
+                      }`}
                       onClick={() => {
                         setShowModal(true), setRoleEditId(role._id);
                       }}
                     />
-                    <RiDeleteBin5Line className="text-2xl cursor-pointer text-red-500 hover:text-red-600 ease-in duration-200" />
-                  </div>
+                    <RiDeleteBin5Line
+                      className={`text-2xl cursor-pointer ${
+                        role.name === "admin" ? "text-gray-600" : "text-red-500"
+                      }`}
+                      onClick={() => {
+                        setShowConfirmBox(true), setRoleEditId(role._id);
+                      }}
+                    />
+                  </button>
                 </td>
               </tr>
             ))}
@@ -85,6 +137,9 @@ const RoleList = () => {
           setShowModal={setShowModal}
           roleEditId={roleEditId}
         />
+      )}
+      {showConfirmBox && (
+        <ConfirmBox handleDeleteConfirmation={handleDeleteConfirmation} />
       )}
     </>
   );
