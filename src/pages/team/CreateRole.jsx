@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Modal from "../../custom/components/Modal";
 import UsePrivateApi from "../../hooks/UsePrivateApi";
 import { ClipLoader } from "react-spinners";
@@ -20,17 +20,16 @@ const CreateRole = ({ showModal, setShowModal, roleEditId }) => {
     msg: "",
     show: false,
   });
-
   const teamCtx = useContext(TeamCtx);
 
-  //for updation
+  //for Updation
   useEffect(() => {
     if (roleEditId) {
       setRole(teamCtx.roles.find((item) => item._id === roleEditId).name);
     }
   }, [roleEditId]);
 
-  // for handling updation api side-effect
+  //for handling updation api side-effects
   useEffect(() => {
     if (patchData) {
       setIsLoading(false);
@@ -63,7 +62,7 @@ const CreateRole = ({ showModal, setShowModal, roleEditId }) => {
     }
   }, [patchData, patchLoading, patchError]);
 
-  //for handling create api side-effect
+  //for handling create api side-effects
   useEffect(() => {
     if (data) {
       setIsLoading(false);
@@ -74,7 +73,7 @@ const CreateRole = ({ showModal, setShowModal, roleEditId }) => {
       });
       setTimeout(() => {
         setShowModal(false);
-      }, 3000);
+      }, 2000);
       teamCtx.addRoleHandler(data?.role);
     }
     if (loading) {
@@ -101,7 +100,6 @@ const CreateRole = ({ showModal, setShowModal, roleEditId }) => {
       });
       return;
     }
-
     if (!roleEditId) {
       post("/api/role/create-role", { name: role });
     } else {

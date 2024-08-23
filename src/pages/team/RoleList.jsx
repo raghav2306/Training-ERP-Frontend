@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import UsePrivateApi from "../../hooks/UsePrivateApi";
-import { FaUserEdit } from "react-icons/fa";
-import { RiDeleteBin5Line } from "react-icons/ri";
 import { ClipLoader } from "react-spinners";
 import UseAlert from "../../hooks/UseAlert";
 import TeamCtx from "../../contexts/TeamContext";
-import CreateRole from "./CreateRole.jsx";
+import { FaUserEdit } from "react-icons/fa";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import CreateRole from "./CreateRole";
+import ConfirmBox from "../../custom/components/ConfirmBox";
 
 const RoleList = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,10 +17,18 @@ const RoleList = () => {
   });
 
   const { data, loading, error, get } = UsePrivateApi();
+  const {
+    data: delData,
+    loading: delLoading,
+    error: delError,
+    del,
+  } = UsePrivateApi();
   const teamCtx = useContext(TeamCtx);
   const [showModal, setShowModal] = useState(false);
   const [roleEditId, setRoleEditId] = useState("");
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
 
+  //for handling get api side-effects
   useEffect(() => {
     if (data) {
       setIsLoading(false);
@@ -32,15 +41,45 @@ const RoleList = () => {
       setIsLoading(false);
       setShowAlert({
         type: "error",
-        msg: "error",
+        msg: error,
         show: true,
       });
     }
   }, [data, loading, error]);
 
+  //for handling delete api side-effects
+  useEffect(() => {
+    if (delData) {
+      setIsLoading(false);
+      const updatedRoles = teamCtx.roles.filter(
+        (item) => item._id !== roleEditId
+      );
+      teamCtx.addRoleHandler(updatedRoles);
+    }
+    if (delLoading) {
+      setIsLoading(true);
+    }
+    if (delError) {
+      setIsLoading(false);
+      setShowAlert({
+        type: "error",
+        msg: delError,
+        show: true,
+      });
+    }
+  }, [delData, delLoading, delError]);
+
   useEffect(() => {
     get("/api/role/get-roles");
   }, []);
+
+  const handleDeleteConfirmation = (arg) => {
+    if (arg) {
+      del(`/api/role/delete-role/${roleEditId}`);
+    }
+    setShowConfirmBox(false);
+  };
+
   return (
     <>
       <table className="w-[80%] m-auto mt-5 ">
@@ -58,11 +97,11 @@ const RoleList = () => {
                 <td>
                   <button
                     className="flex justify-center items-center gap-5 "
-                    disabled={role.name === "Admin"}
+                    disabled={role.name === "admin"}
                   >
                     <FaUserEdit
                       className={`text-2xl cursor-pointer ${
-                        role.name === "Admin"
+                        role.name === "admin"
                           ? "text-gray-600"
                           : "text-green-600"
                       }`}
@@ -72,8 +111,11 @@ const RoleList = () => {
                     />
                     <RiDeleteBin5Line
                       className={`text-2xl cursor-pointer ${
-                        role.name === "Admin" ? "text-gray-500" : "text-red-500"
+                        role.name === "admin" ? "text-gray-600" : "text-red-500"
                       }`}
+                      onClick={() => {
+                        setShowConfirmBox(true), setRoleEditId(role._id);
+                      }}
                     />
                   </button>
                 </td>
@@ -81,23 +123,23 @@ const RoleList = () => {
             ))}
         </tbody>
       </table>
-
       {isLoading && (
         <div className="flex justify-center">
           <ClipLoader size={40} color="#333" />
         </div>
       )}
-
       {showAlert.show && (
         <UseAlert showAlert={showAlert} setShowAlert={setShowAlert} />
       )}
-
       {showModal && (
         <CreateRole
           showModal={showModal}
           setShowModal={setShowModal}
           roleEditId={roleEditId}
         />
+      )}
+      {showConfirmBox && (
+        <ConfirmBox handleDeleteConfirmation={handleDeleteConfirmation} />
       )}
     </>
   );
