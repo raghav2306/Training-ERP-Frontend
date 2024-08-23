@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+body{
+  cursor: url("cursor.png"), auto;
+}
+
 body,
 html {
   height: 100%;

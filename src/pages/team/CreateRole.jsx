@@ -5,10 +5,16 @@ import { ClipLoader } from "react-spinners";
 import UseAlert from "../../hooks/UseAlert";
 import TeamCtx from "../../contexts/TeamContext";
 
-const CreateRole = ({ showModal, setShowModal }) => {
+const CreateRole = ({ showModal, setShowModal, roleEditId }) => {
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { data, loading, error, post } = UsePrivateApi();
+  const {
+    data: patchData,
+    loading: patchLoading,
+    error: patchError,
+    patch,
+  } = UsePrivateApi();
   const [showAlert, setShowAlert] = useState({
     type: "",
     msg: "",
@@ -17,6 +23,47 @@ const CreateRole = ({ showModal, setShowModal }) => {
 
   const teamCtx = useContext(TeamCtx);
 
+  //for updation
+  useEffect(() => {
+    if (roleEditId) {
+      setRole(teamCtx.roles.find((item) => item._id === roleEditId).name);
+    }
+  }, [roleEditId]);
+
+  // for handling updation api side-effect
+  useEffect(() => {
+    if (patchData) {
+      setIsLoading(false);
+      setShowAlert({
+        type: "success",
+        msg: patchData?.message,
+        show: true,
+      });
+      setTimeout(() => {
+        setShowModal(false);
+      }, 2000);
+      const updatedRoles = teamCtx.roles.map((item) => {
+        if (item._id === roleEditId) {
+          return { ...item, name: role };
+        }
+        return item;
+      });
+      teamCtx.addRoleHandler(updatedRoles);
+    }
+    if (patchLoading) {
+      setIsLoading(true);
+    }
+    if (patchError) {
+      setIsLoading(false);
+      setShowAlert({
+        type: "error",
+        msg: patchError,
+        show: true,
+      });
+    }
+  }, [patchData, patchLoading, patchError]);
+
+  //for handling create api side-effect
   useEffect(() => {
     if (data) {
       setIsLoading(false);
@@ -55,7 +102,11 @@ const CreateRole = ({ showModal, setShowModal }) => {
       return;
     }
 
-    post("/api/role/create-role", { name: role });
+    if (!roleEditId) {
+      post("/api/role/create-role", { name: role });
+    } else {
+      patch(`/api/role/edit-role/${roleEditId}`, { name: role });
+    }
   };
 
   return (
@@ -69,10 +120,15 @@ const CreateRole = ({ showModal, setShowModal }) => {
             placeholder="Enter name"
             className="border bg-blue-100 rounded px-2 py-1 outline-none"
             onChange={(e) => setRole(e.target.value)}
+            value={role}
           />
           <button className="border border-blue-500 px-2 py-1 rounded text-blue-500 hover:bg-blue-600 hover:text-white ease duration-300 mt-4">
             {!isLoading ? (
-              "Submit"
+              roleEditId ? (
+                "Update Role"
+              ) : (
+                "Create Role"
+              )
             ) : (
               <div className="grid place-content-center">
                 <ClipLoader size={30} color="#fff" />
