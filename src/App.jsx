@@ -6,6 +6,7 @@ import TeamIndex from "./pages/team/Index";
 import Employee from "./pages/team/Employee";
 import Department from "./pages/team/Department";
 import Role from "./pages/team/Role";
+import Profile from "./pages/profile/Profile";
 import UsePersistLogin from "./hooks/UsePersistLogin";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route element={<UsePersistLogin />}>
           <Route element={<Root />}>
             <Route path="/" element={<Home />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
             <Route path="/team" element={<TeamIndex />}>
               <Route index element={<Employee />} />
               <Route path="employee" element={<Employee />} />
