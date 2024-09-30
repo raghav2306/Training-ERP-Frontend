@@ -7,9 +7,16 @@ import TeamCtx from "../../contexts/TeamContext";
 
 const CreateDepartment = ({ showModal, setShowModal, deptId }) => {
   const [department, setDepartment] = useState("");
+  const [manager, setManager] = useState("");
   const [managersList, setManagersList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { data, loading, error, post } = UsePrivateApi();
+  const {
+    data: putData,
+    loading: putLoading,
+    error: putError,
+    put,
+  } = UsePrivateApi();
   const {
     data: getData,
     loading: getLoading,
@@ -56,7 +63,7 @@ const CreateDepartment = ({ showModal, setShowModal, deptId }) => {
       //updation
       if (deptId) {
         const dept = teamCtx.depts.find((item) => item._id === deptId);
-        setDepartment(dept);
+        setDepartment(dept.name);
         if (dept?.managerId) {
           updatedManagersList = [
             ...updatedManagersList,
@@ -100,7 +107,14 @@ const CreateDepartment = ({ showModal, setShowModal, deptId }) => {
       return;
     }
 
-    post("/api/dept/create-dept", { name: department });
+    if (deptId) {
+      put(`/api/dept/update-dept/${deptId}`, {
+        name: department,
+        managerId: manager,
+      });
+    } else {
+      post("/api/dept/create-dept", { name: department });
+    }
   };
 
   return (
@@ -114,12 +128,13 @@ const CreateDepartment = ({ showModal, setShowModal, deptId }) => {
             placeholder="Enter department name"
             className="border bg-blue-100 rounded px-2 py-1 outline-none"
             onChange={(e) => setDepartment(e.target.value)}
-            value={department.name}
+            value={department}
           />
           <select
             name=""
             id=""
             className="border bg-blue-100 rounded px-2 py-1 outline-none"
+            onChange={(e) => setManager(e.target.value)}
           >
             <option hidden>Select Manager</option>
             {managersList.length > 0 &&
