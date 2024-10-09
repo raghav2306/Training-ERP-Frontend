@@ -33,6 +33,33 @@ const SideMenu = () => {
         </div>
         <div>
           <NavLink
+            to="/work"
+            className="hover:bg-gradient-to-r from-purple-500 to-pink-500 flex items-center   py-2 hover:text-white gap-4 px-2 rounded"
+          >
+            <RxDashboard />
+            Work
+          </NavLink>
+        </div>
+        <div>
+          <NavLink
+            to="/attendance"
+            className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-4  py-2  px-2 rounded"
+          >
+            <RiTeamFill />
+            Attendance
+          </NavLink>
+        </div>
+        <div>
+          <NavLink
+            to="/documents"
+            className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-4  py-2  px-2 rounded"
+          >
+            <RiTeamFill />
+            Documents
+          </NavLink>
+        </div>
+        <div>
+          <NavLink
             to="/team"
             className="hover:bg-gradient-to-r hover:text-white from-purple-500 to-pink-500 flex items-center gap-4  py-2  px-2 rounded"
           >
