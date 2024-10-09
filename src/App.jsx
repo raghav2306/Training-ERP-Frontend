@@ -12,7 +12,6 @@ import Attendance from "./pages/attendance/Attendance";
 import Work from "./pages/work/Work";
 import Documents from "./pages/documents/Documents";
 
-
 function App() {
   return (
     <BrowserRouter>
